@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Black Tile: Hide Any Part of Your Screen</title>
+<meta name="description" content="Black Tile puts movable black tiles over any Android app to hide chats, OTPs and balances from people nearby. No ads, no account, no data collected.">
+<meta name="theme-color" content="#0f1330">
+<meta property="og:title" content="Black Tile: Hide Any Part of Your Screen">
+<meta property="og:description" content="Movable black tiles for Android screen privacy. No ads, no account, no data collected.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231b1f4b'/%3E%3Crect x='14' y='10' width='36' height='44' rx='6' fill='none' stroke='white' stroke-width='3'/%3E%3Crect x='19' y='33' width='26' height='15' rx='3' fill='black' stroke='white' stroke-width='1.5'/%3E%3C/svg%3E">
+
+<style>
+  :root {
+    --bg:#0b0e24; --bg2:#10143a; --card:#141a45; --line:#262d66;
+    --fg:#eef0ff; --muted:#a3aad9; --accent:#8b93ff; --accent2:#c4c8ff;
+    --radius:20px;
+  }
+  * { box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body {
+    margin:0; background:var(--bg); color:var(--fg);
+    font:16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  a { color:var(--accent2); }
+  .wrap { max-width:1080px; margin:0 auto; padding:0 20px; }
+
+  /* nav */
+  header { position:sticky; top:0; z-index:10; background:rgba(11,14,36,.82);
+           backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+  nav { display:flex; align-items:center; justify-content:space-between; height:60px; }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:700; color:var(--fg); text-decoration:none; }
+  .brand svg { width:30px; height:30px; }
+  .links { display:flex; gap:22px; }
+  .links a { color:var(--muted); text-decoration:none; font-size:.95rem; }
+  .links a:hover { color:var(--fg); }
+  @media (max-width:640px){ .links a:not(.keep){ display:none; } }
+
+  /* hero */
+  .hero { display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center;
+          padding:64px 0 72px; }
+  @media (max-width:820px){ .hero{ grid-template-columns:1fr; padding-top:40px; text-align:center; }
+                            .hero .cta{ justify-content:center; } .phone-col{ order:-1; } }
+  .eyebrow { display:inline-block; padding:4px 12px; border:1px solid var(--line); border-radius:99px;
+             color:var(--accent2); font-size:.82rem; letter-spacing:.04em; }
+  h1 { font-size:clamp(2.2rem, 5vw, 3.4rem); line-height:1.1; margin:16px 0 14px; letter-spacing:-.02em; }
+  h1 em { font-style:normal; color:var(--accent); }
+  .lead { font-size:1.12rem; color:var(--muted); max-width:34em; margin:0 auto 26px 0; }
+  @media (max-width:820px){ .lead{ margin:0 auto 26px; } }
+  .cta { display:flex; gap:12px; flex-wrap:wrap; }
+  .btn { display:inline-block; padding:13px 22px; border-radius:14px; font-weight:600;
+         text-decoration:none; border:1px solid transparent; }
+  .btn.primary { background:var(--accent); color:#0b0e24; }
+  .btn.primary:hover { background:var(--accent2); }
+  .btn.ghost { border-color:var(--line); color:var(--fg); }
+  .btn.ghost:hover { background:var(--card); }
+  .note { margin-top:14px; font-size:.88rem; color:var(--muted); }
+
+  /* phone mockup */
+  .phone-col { display:flex; justify-content:center; }
+  .phone { width:262px; height:520px; border-radius:38px; border:8px solid #1c2252;
+           background:#0a0d22; position:relative; overflow:hidden;
+           box-shadow:0 30px 80px rgba(0,0,0,.55), 0 0 0 1px var(--line); }
+  .phone .bar { height:22px; display:flex; justify-content:space-between; padding:6px 16px 0;
+                font-size:10px; color:var(--muted); }
+  .chat-head { margin:10px 14px 6px; display:flex; align-items:center; gap:8px; }
+  .avatar { width:28px; height:28px; border-radius:50%; background:#2b3280; }
+  .line { height:9px; border-radius:6px; background:#2a3070; }
+  .msgs { padding:8px 14px; display:flex; flex-direction:column; gap:10px; }
+  .bubble { padding:10px 12px; border-radius:14px; background:#171d52; max-width:82%; font-size:12px; color:#dfe2ff; }
+  .bubble.me { align-self:flex-end; background:#3a43a8; }
+  .bubble small { display:block; color:var(--muted); font-size:10px; margin-top:2px; }
+  .secret { font-weight:700; letter-spacing:.06em; }
+  .tile { position:absolute; left:14px; right:14px; top:222px; height:76px; border-radius:10px;
+          background:#000; border:1.5px dashed #fff; transform-origin:left center;
+          animation:slide 6s ease-in-out infinite; }
+  .tile::after { content:""; position:absolute; right:3px; bottom:3px; width:0; height:0;
+                 border-left:12px solid transparent; border-bottom:12px solid #fff; }
+  .tile::before { content:"✕"; position:absolute; right:6px; top:4px; width:17px; height:17px;
+                  border-radius:50%; background:#fff; color:#000; font-size:10px;
+                  display:grid; place-items:center; }
+  @keyframes slide {
+    0%, 8%   { transform:scaleX(0); opacity:.2; }
+    30%, 85% { transform:scaleX(1); opacity:1; }
+    100%     { transform:scaleX(0); opacity:.2; }
+  }
+  @media (prefers-reduced-motion: reduce){ .tile{ animation:none; } }
+
+  /* sections */
+  section { padding:64px 0; }
+  section.alt { background:var(--bg2); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  h2 { font-size:clamp(1.6rem,3.2vw,2.1rem); margin:0 0 10px; letter-spacing:-.01em; }
+  .sub { color:var(--muted); max-width:38em; margin:0 0 34px; }
+  .grid { display:grid; gap:18px; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:var(--radius); padding:22px; }
+  .card h3 { margin:10px 0 6px; font-size:1.08rem; }
+  .card p { margin:0; color:var(--muted); font-size:.96rem; }
+  .ico { width:42px; height:42px; border-radius:12px; background:#222a70; display:grid;
+         place-items:center; font-size:20px; }
+  .steps { counter-reset:s; }
+  .steps .card { position:relative; padding-top:46px; }
+  .steps .card::before { counter-increment:s; content:counter(s); position:absolute; top:16px; left:22px;
+         width:26px; height:26px; border-radius:50%; background:var(--accent); color:#0b0e24;
+         font-weight:800; display:grid; place-items:center; font-size:.9rem; }
+
+  /* faq */
+  details { background:var(--card); border:1px solid var(--line); border-radius:14px;
+            padding:14px 18px; margin-bottom:10px; }
+  summary { cursor:pointer; font-weight:600; }
+  details p { color:var(--muted); margin:10px 0 2px; }
+
+  /* policy */
+  .policy { max-width:760px; }
+  .policy h3 { color:var(--accent2); margin:26px 0 4px; font-size:1.08rem; }
+  .policy p, .policy li { color:var(--muted); margin:6px 0; }
+  .policy strong { color:var(--fg); }
+
+  /* contact */
+  .contact { display:grid; gap:18px; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); }
+  .contact .card p { color:var(--fg); }
+  footer { border-top:1px solid var(--line); padding:26px 0 40px; color:var(--muted); font-size:.9rem; }
+  footer .wrap { display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <nav aria-label="Main">
+      <a class="brand" href="#top" aria-label="Black Tile home">
+        <svg viewBox="0 0 64 64" aria-hidden="true">
+          <rect width="64" height="64" rx="14" fill="#1b1f4b"/>
+          <rect x="14" y="10" width="36" height="44" rx="6" fill="none" stroke="#fff" stroke-width="3"/>
+          <rect x="19" y="33" width="26" height="15" rx="3" fill="#000" stroke="#fff" stroke-width="1.5"/>
+        </svg>
+        Black Tile
+      </a>
+      <div class="links">
+        <a href="#features">Features</a>
+        <a href="#how">How it works</a>
+        <a href="#faq">FAQ</a>
+        <a href="#privacy">Privacy</a>
+        <a class="keep" href="#contact">Contact</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <div class="wrap hero">
+    <div>
+      <span class="eyebrow">Android &middot; Free &middot; No ads</span>
+      <h1>Hide what's private. <em>One tap.</em></h1>
+      <p class="lead">Black Tile puts movable black tiles over any app, so people nearby can't read your chats, OTPs or balances. No account. No internet. No data collected.</p>
+      <div class="cta">
+        <!-- Replace href with your Indus Appstore link once the app is live -->
+        <a class="btn primary" href="#" aria-disabled="true">Get it on Indus Appstore</a>
+        <a class="btn ghost" href="#how">See how it works</a>
+      </div>
+      <p class="note">Android 8.0 or newer.</p>
+    </div>
+
+    <div class="phone-col">
+      <div class="phone" role="img" aria-label="Phone screen where a black tile slides over a private message">
+        <div class="bar"><span>9:41</span><span>5G &#9646;&#9646;&#9646;</span></div>
+        <div class="chat-head"><div class="avatar"></div><div><div class="line" style="width:90px"></div><div class="line" style="width:54px;margin-top:5px;opacity:.6"></div></div></div>
+        <div class="msgs">
+          <div class="bubble">Hey, are we still on for tonight?</div>
+          <div class="bubble me">Yes! Sending the details now.</div>
+          <div class="bubble">Your OTP is <span class="secret">4 8 2 9 1 7</span><small>Do not share</small></div>
+          <div class="bubble">Balance: <span class="secret">&#8377; 48,250</span><small>Savings account</small></div>
+          <div class="bubble me">Thanks, got it.</div>
+        </div>
+        <div class="tile"></div>
+      </div>
+    </div>
+  </div>
+
+  <section id="features" class="alt">
+    <div class="wrap">
+      <h2>Simple controls, solid privacy</h2>
+      <p class="sub">Everything you need to cover part of your screen, and nothing you don't.</p>
+      <div class="grid">
+        <div class="card"><div class="ico">&#9724;</div><h3>Movable tiles</h3><p>Add as many black tiles as you like. Drag to move, pull the corner to resize, tap the cross to remove.</p></div>
+        <div class="card"><div class="ico">&#128274;</div><h3>Lock mode</h3><p>Lock your tiles and your touches pass through to the app underneath, so you can keep using your phone.</p></div>
+        <div class="card"><div class="ico">&#9680;</div><h3>Adjustable opacity</h3><p>Go from a light dim to fully solid black with a slider from 20% to 100%.</p></div>
+        <div class="card"><div class="ico">&#9889;</div><h3>Quick Settings tile</h3><p>Show or hide all your tiles in one tap from the pull-down menu.</p></div>
+        <div class="card"><div class="ico">&#128241;</div><h3>Home-screen widget</h3><p>Start, hide, add a tile, or lock and edit straight from your home screen.</p></div>
+        <div class="card"><div class="ico">&#128276;</div><h3>Notification controls</h3><p>Lock, hide or stop from the notification shade without opening the app.</p></div>
+        <div class="card"><div class="ico">&#128190;</div><h3>Remembers your layout</h3><p>Your tile positions and settings are saved on your phone for next time.</p></div>
+        <div class="card"><div class="ico">&#128737;</div><h3>Private by design</h3><p>No account, no ads, no internet access. Nothing leaves your device.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <h2>Set up in under a minute</h2>
+      <p class="sub">Three steps and your screen is covered.</p>
+      <div class="grid steps">
+        <div class="card"><h3>Allow the overlay</h3><p>Tap "Grant display over other apps" and switch it on. This lets Black Tile draw above other apps.</p></div>
+        <div class="card"><h3>Place your tile</h3><p>Tap Start, then drag the tile over the part of the screen you want hidden and resize it.</p></div>
+        <div class="card"><h3>Lock and go</h3><p>Lock the tile, then use the Quick Settings tile or widget to show and hide it whenever you need.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq" class="alt">
+    <div class="wrap">
+      <h2>Good to know</h2>
+      <p class="sub">Straight answers, including the limits.</p>
+      <details><summary>Is this the same as Samsung's Privacy Display?</summary>
+        <p>No. Samsung's feature is built into the screen hardware and narrows the viewing angle. Black Tile is a software mask: it covers the parts you choose, so someone beside you can't read them. Anything outside your tiles stays visible.</p></details>
+      <details><summary>Does it record or read my screen?</summary>
+        <p>No. It only draws solid tiles on top of your screen and never reads, captures or stores what is under them.</p></details>
+      <details><summary>Why does it need "Display over other apps"?</summary>
+        <p>That is the Android permission that allows an app to draw above other apps. It is the core of how tiles work, and it is used for nothing else.</p></details>
+      <details><summary>Can I still tap under a tile?</summary>
+        <p>On Android 12 and newer, a fully opaque overlay blocks touches in its own area, even when locked. Taps outside the tile work normally.</p></details>
+      <details><summary>Does it work everywhere?</summary>
+        <p>It works over almost every app. Android doesn't allow overlays on some secure system screens, such as permission dialogs, and a few apps protect themselves too.</p></details>
+      <details><summary>Do my tiles move when I rotate the phone?</summary>
+        <p>Tile positions are saved in screen pixels, so after rotating you may need to move them to fit the new layout.</p></details>
+      <details><summary>Does it use the internet?</summary>
+        <p>No. The app has no internet permission and sends nothing anywhere.</p></details>
+    </div>
+  </section>
+
+  <section id="privacy">
+    <div class="wrap policy">
+      <h2>Privacy Policy</h2>
+      <p class="sub" style="margin-bottom:10px">Last updated: 12 November 2026</p>
+
+      <p>Black Tile ("the app") is an Android app developed by Rahul Baberwal. It places movable black tiles over other apps so you can hide part of your screen.</p>
+
+      <h3>Data we collect</h3>
+      <p><strong>None.</strong> The app does not collect, store, transmit or share any personal data. It has no account system, no analytics, no advertising and no internet access.</p>
+
+      <h3>Data kept on your device</h3>
+      <p>The app saves your tile positions, sizes, opacity and your lock and visibility choices in private storage on your phone. This data never leaves your device and is deleted when you uninstall the app.</p>
+
+      <h3>Permissions</h3>
+      <ul>
+        <li><strong>Display over other apps:</strong> used only to draw the black tiles you place.</li>
+        <li><strong>Notifications:</strong> used only to show the ongoing notification with Lock, Hide and Stop controls.</li>
+        <li><strong>Foreground service:</strong> keeps your tiles on screen while you use other apps.</li>
+      </ul>
+      <p>The app does not request access to your camera, microphone, location, contacts, files or accessibility services.</p>
+
+      <h3>Your screen content</h3>
+      <p>The app does not read, record, capture or analyse what appears on your screen. It only draws solid tiles on top of it.</p>
+
+      <h3>Children</h3>
+      <p>The app is not directed at children and collects no data from anyone.</p>
+
+      <h3>Changes to this policy</h3>
+      <p>If this policy changes, the updated version will be posted on this page with a new date.</p>
+
+      <h3>Contact</h3>
+      <p>Questions about this policy? Email <a href="mailto:im@rahulbaberwal.com">im@rahulbaberwal.com</a>.</p>
+    </div>
+  </section>
+
+  <section id="contact" class="alt">
+    <div class="wrap">
+      <h2>Contact</h2>
+      <p class="sub">Feedback, bug reports or ideas for the next version? I read everything.</p>
+      <div class="contact">
+        <div class="card"><div class="ico">&#128100;</div><h3>Developer</h3><p>Rahul Baberwal</p></div>
+        <div class="card"><div class="ico">&#9993;</div><h3>Email</h3><p><a href="mailto:im@rahulbaberwal.com">im@rahulbaberwal.com</a></p></div>
+        <div class="card"><div class="ico">&#127760;</div><h3>Website</h3><p><a href="https://rahulbaberwal.com" rel="noopener">rahulbaberwal.com</a></p></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Rahul Baberwal. Black Tile.</span>
+    <span><a href="#privacy">Privacy Policy</a> &middot; <a href="mailto:im@rahulbaberwal.com">im@rahulbaberwal.com</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
