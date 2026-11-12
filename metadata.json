@@ -1,0 +1,6 @@
+{
+  "name": "Black Tile",
+  "description": "A software privacy display app allowing users to place movable, resizable black tiles over any app to shield sensitive information.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

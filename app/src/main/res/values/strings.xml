@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Black Tile</string>
+    <string name="status_active">Privacy display is active (%1$d %2$s)</string>
+    <string name="status_stopped">Privacy display is stopped</string>
+    <string name="status_permission_needed">Overlay permission required to display tiles over other apps.</string>
+    <string name="btn_grant_permission">Grant Display Over Other Apps</string>
+    <string name="btn_start">Start Overlay</string>
+    <string name="btn_stop">Stop Overlay</string>
+    <string name="btn_add_tile">+ Add a Tile</string>
+    <string name="label_lock_tiles">Lock Tiles</string>
+    <string name="desc_lock_tiles">Hide handles and pass touches to apps below</string>
+    <string name="label_show_tiles">Show Tiles</string>
+    <string name="desc_show_tiles">Toggle visibility of all black tiles</string>
+    <string name="label_opacity">Tile Opacity</string>
+    <string name="help_title">How to Use</string>
+    <string name="help_text" formatted="false">1. Edit Mode: Drag anywhere on a tile to move. Drag the bottom-right corner to resize. Tap ✕ to delete.\n2. Lock Mode: Hides borders and handles, allowing all touch events to pass directly through.\n3. Opacity: Tune shade opacity between 20% and 100%.\n4. Quick Settings: Use the Quick Settings tile in your notification drawer.\n5. Widget: Add the 3-button widget to your home screen.</string>
+    <string name="notification_channel_name">Black Tile Overlay</string>
+    <string name="notification_channel_desc">Active privacy display overlay service</string>
+    <string name="notification_title">Black Tile Overlay Active</string>
+    <string name="action_lock">Lock</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_hide">Hide</string>
+    <string name="action_show">Show</string>
+    <string name="action_stop">Stop</string>
+    <string name="qs_tile_label">Black Tile</string>
+    <string name="widget_name">Black Tile Widget</string>
+    <string name="tile_singular">tile</string>
+    <string name="tile_plural">tiles</string>
+</resources>

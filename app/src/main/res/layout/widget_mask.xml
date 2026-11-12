@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widgetContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_bg"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="4dp">
+
+    <Button
+        android:id="@+id/btnWidgetToggle"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="2dp"
+        android:layout_weight="1"
+        android:background="@drawable/btn_dark_rounded"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/btn_start"
+        android:textColor="@color/accent"
+        android:textSize="12sp"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/btnWidgetAdd"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="2dp"
+        android:layout_weight="1"
+        android:background="@drawable/btn_dark_rounded"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/btn_add_tile"
+        android:textColor="@color/text_primary"
+        android:textSize="12sp" />
+
+    <Button
+        android:id="@+id/btnWidgetLock"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_margin="2dp"
+        android:layout_weight="1"
+        android:background="@drawable/btn_dark_rounded"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/action_lock"
+        android:textColor="@color/text_primary"
+        android:textSize="12sp" />
+
+</LinearLayout>
