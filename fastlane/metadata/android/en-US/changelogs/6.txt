@@ -1,0 +1,5 @@
+- Privacy Shield 100% Dark Lock: Guaranteed 100% full opacity when locked so underlying screen content is completely concealed.
+- 6 Overlay Styles & Textures: Choose between Pitch Black (OLED), Matte Obsidian, Midnight Navy, Dark Slate, Carbon Fiber Weave, and Security Dot Mesh.
+- Live Style Switching: Instantly preview and apply overlay textures from Settings to active tiles.
+- Zero network permission, pure offline security.
+

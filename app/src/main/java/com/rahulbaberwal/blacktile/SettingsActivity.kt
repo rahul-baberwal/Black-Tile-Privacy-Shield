@@ -7,15 +7,17 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 
 /**
- * Settings activity for configuring tile opacity (both editing and locked modes),
+ * Settings activity for configuring overlay appearance, style textures, tile opacity,
  * clearing all configured tiles, resetting to defaults, and accessing the privacy policy.
  * All changes persist to SharedPreferences (MaskPrefs) and propagate immediately to the
  * running OverlayService if active.
@@ -23,10 +25,28 @@ import android.widget.Toast
 class SettingsActivity : Activity() {
 
     private lateinit var btnBack: ImageButton
+
+    // Style rows and checkmarks
+    private lateinit var rowStylePureBlack: LinearLayout
+    private lateinit var checkStylePureBlack: ImageView
+    private lateinit var rowStyleMatteObsidian: LinearLayout
+    private lateinit var checkStyleMatteObsidian: ImageView
+    private lateinit var rowStyleDarkNavy: LinearLayout
+    private lateinit var checkStyleDarkNavy: ImageView
+    private lateinit var rowStyleDarkSlate: LinearLayout
+    private lateinit var checkStyleDarkSlate: ImageView
+    private lateinit var rowStyleCarbonWeave: LinearLayout
+    private lateinit var checkStyleCarbonWeave: ImageView
+    private lateinit var rowStyleDotMatrix: LinearLayout
+    private lateinit var checkStyleDotMatrix: ImageView
+
+    // Opacity
     private lateinit var tvEditOpacityValue: TextView
     private lateinit var sbEditOpacity: SeekBar
     private lateinit var tvLockedOpacityValue: TextView
     private lateinit var sbLockedOpacity: SeekBar
+
+    // Actions
     private lateinit var btnRemoveAllTiles: Button
     private lateinit var btnResetDefaults: Button
     private lateinit var rowPrivacyPolicy: LinearLayout
@@ -48,10 +68,28 @@ class SettingsActivity : Activity() {
 
     private fun initViews() {
         btnBack = findViewById(R.id.btnBack)
+
+        // Styles
+        rowStylePureBlack = findViewById(R.id.rowStylePureBlack)
+        checkStylePureBlack = findViewById(R.id.checkStylePureBlack)
+        rowStyleMatteObsidian = findViewById(R.id.rowStyleMatteObsidian)
+        checkStyleMatteObsidian = findViewById(R.id.checkStyleMatteObsidian)
+        rowStyleDarkNavy = findViewById(R.id.rowStyleDarkNavy)
+        checkStyleDarkNavy = findViewById(R.id.checkStyleDarkNavy)
+        rowStyleDarkSlate = findViewById(R.id.rowStyleDarkSlate)
+        checkStyleDarkSlate = findViewById(R.id.checkStyleDarkSlate)
+        rowStyleCarbonWeave = findViewById(R.id.rowStyleCarbonWeave)
+        checkStyleCarbonWeave = findViewById(R.id.checkStyleCarbonWeave)
+        rowStyleDotMatrix = findViewById(R.id.rowStyleDotMatrix)
+        checkStyleDotMatrix = findViewById(R.id.checkStyleDotMatrix)
+
+        // Opacity
         tvEditOpacityValue = findViewById(R.id.tvEditOpacityValue)
         sbEditOpacity = findViewById(R.id.sbEditOpacity)
         tvLockedOpacityValue = findViewById(R.id.tvLockedOpacityValue)
         sbLockedOpacity = findViewById(R.id.sbLockedOpacity)
+
+        // Actions
         btnRemoveAllTiles = findViewById(R.id.btnRemoveAllTiles)
         btnResetDefaults = findViewById(R.id.btnResetDefaults)
         rowPrivacyPolicy = findViewById(R.id.rowPrivacyPolicy)
@@ -62,6 +100,27 @@ class SettingsActivity : Activity() {
             finish()
         }
 
+        // Style option listeners
+        rowStylePureBlack.setOnClickListener {
+            selectOverlayStyle(MaskPrefs.STYLE_PURE_BLACK)
+        }
+        rowStyleMatteObsidian.setOnClickListener {
+            selectOverlayStyle(MaskPrefs.STYLE_MATTE_OBSIDIAN)
+        }
+        rowStyleDarkNavy.setOnClickListener {
+            selectOverlayStyle(MaskPrefs.STYLE_DARK_NAVY)
+        }
+        rowStyleDarkSlate.setOnClickListener {
+            selectOverlayStyle(MaskPrefs.STYLE_DARK_SLATE)
+        }
+        rowStyleCarbonWeave.setOnClickListener {
+            selectOverlayStyle(MaskPrefs.STYLE_CARBON_WEAVE)
+        }
+        rowStyleDotMatrix.setOnClickListener {
+            selectOverlayStyle(MaskPrefs.STYLE_DOT_MATRIX)
+        }
+
+        // Opacity sliders
         sbEditOpacity.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 val opacity = progress + MaskPrefs.MIN_OPACITY
@@ -107,9 +166,28 @@ class SettingsActivity : Activity() {
         }
     }
 
+    private fun selectOverlayStyle(style: String) {
+        MaskPrefs.setOverlayStyle(this, style)
+        updateStyleCheckmarks(style)
+        notifyServiceRefresh()
+    }
+
+    private fun updateStyleCheckmarks(currentStyle: String) {
+        checkStylePureBlack.visibility = if (currentStyle == MaskPrefs.STYLE_PURE_BLACK) View.VISIBLE else View.GONE
+        checkStyleMatteObsidian.visibility = if (currentStyle == MaskPrefs.STYLE_MATTE_OBSIDIAN) View.VISIBLE else View.GONE
+        checkStyleDarkNavy.visibility = if (currentStyle == MaskPrefs.STYLE_DARK_NAVY) View.VISIBLE else View.GONE
+        checkStyleDarkSlate.visibility = if (currentStyle == MaskPrefs.STYLE_DARK_SLATE) View.VISIBLE else View.GONE
+        checkStyleCarbonWeave.visibility = if (currentStyle == MaskPrefs.STYLE_CARBON_WEAVE) View.VISIBLE else View.GONE
+        checkStyleDotMatrix.visibility = if (currentStyle == MaskPrefs.STYLE_DOT_MATRIX) View.VISIBLE else View.GONE
+    }
+
     private fun loadPreferences() {
         isBinding = true
         try {
+            // Load and display current style selection
+            val currentStyle = MaskPrefs.getOverlayStyle(this)
+            updateStyleCheckmarks(currentStyle)
+
             val editOpacity = MaskPrefs.getOpacity(this)
             sbEditOpacity.progress = (editOpacity - MaskPrefs.MIN_OPACITY).coerceIn(0, 80)
             tvEditOpacityValue.text = "$editOpacity%"
@@ -190,4 +268,3 @@ class SettingsActivity : Activity() {
         }
     }
 }
-

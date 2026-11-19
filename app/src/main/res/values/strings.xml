@@ -26,11 +26,28 @@
 
     <!-- Settings Screen -->
     <string name="title_settings">Settings</string>
+
+    <!-- Overlay Styles & Textures -->
+    <string name="settings_section_styles">Overlay Style &amp; Texture</string>
+    <string name="settings_desc_styles">Privacy shield appearance (always 100% fully dark &amp; opaque when locked)</string>
+    <string name="style_pure_black_title">Pitch Black (OLED)</string>
+    <string name="style_pure_black_desc">100% solid pitch black for maximum privacy and OLED efficiency</string>
+    <string name="style_matte_obsidian_title">Matte Obsidian</string>
+    <string name="style_matte_obsidian_desc">Deep matte charcoal with anti-glare finish</string>
+    <string name="style_dark_navy_title">Midnight Navy</string>
+    <string name="style_dark_navy_desc">Rich dark navy hue matching the app visual theme</string>
+    <string name="style_dark_slate_title">Dark Slate</string>
+    <string name="style_dark_slate_desc">Deep graphite slate for subtle on-screen blending</string>
+    <string name="style_carbon_weave_title">Carbon Fiber Weave</string>
+    <string name="style_carbon_weave_desc">Textured micro-weave pattern, 100% opaque security shield</string>
+    <string name="style_dot_matrix_title">Security Dot Mesh</string>
+    <string name="style_dot_matrix_desc">Textured precision micro-mesh grid, 100% opaque</string>
+
     <string name="settings_section_opacity">Opacity Settings</string>
     <string name="label_opacity_edit">Opacity while editing</string>
     <string name="desc_opacity_edit">Used while moving and resizing tiles in edit mode</string>
-    <string name="label_opacity_locked">Opacity when locked (default 100%)</string>
-    <string name="desc_opacity_locked">Used when tiles are locked for screen privacy</string>
+    <string name="label_opacity_locked">Opacity when locked (100% Fully Dark)</string>
+    <string name="desc_opacity_locked">Always 100% solid and opaque when locked — nothing underneath is visible</string>
     <string name="settings_section_management">Tile Management</string>
     <string name="btn_remove_all_tiles">Remove All Tiles</string>
     <string name="desc_remove_all_tiles">Delete all currently configured floating privacy tiles</string>

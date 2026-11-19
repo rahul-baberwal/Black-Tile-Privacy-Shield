@@ -152,14 +152,14 @@ class OverlayService : Service(), MaskView.TileInteractionListener {
     private fun handleLock(locked: Boolean) {
         MaskPrefs.setLocked(this, locked)
         val visible = MaskPrefs.isVisible(this)
-        val editOpacity = MaskPrefs.getOpacity(this)
-        val lockedOpacity = MaskPrefs.getLockedOpacity(this)
+        val opacity = MaskPrefs.getOpacity(this)
+        val style = MaskPrefs.getOverlayStyle(this)
 
         for ((_, pair) in activeViews) {
             val (maskView, params) = pair
             maskView.isLocked = locked
-            maskView.opacity = editOpacity
-            maskView.lockedOpacity = lockedOpacity
+            maskView.opacity = opacity
+            maskView.overlayStyle = style
             maskView.invalidate()
 
             params.flags = computeWindowFlags(locked, visible)
@@ -181,10 +181,10 @@ class OverlayService : Service(), MaskView.TileInteractionListener {
     }
 
     private fun handleRefresh() {
-        val editOpacity = MaskPrefs.getOpacity(this)
-        val lockedOpacity = MaskPrefs.getLockedOpacity(this)
+        val opacity = MaskPrefs.getOpacity(this)
         val locked = MaskPrefs.isLocked(this)
         val visible = MaskPrefs.isVisible(this)
+        val style = MaskPrefs.getOverlayStyle(this)
 
         // Sync tiles list with disk
         tiles.clear()
@@ -192,8 +192,8 @@ class OverlayService : Service(), MaskView.TileInteractionListener {
 
         for ((_, pair) in activeViews) {
             val (maskView, params) = pair
-            maskView.opacity = editOpacity
-            maskView.lockedOpacity = lockedOpacity
+            maskView.opacity = opacity
+            maskView.overlayStyle = style
             maskView.isLocked = locked
             maskView.invalidate()
 
@@ -253,15 +253,15 @@ class OverlayService : Service(), MaskView.TileInteractionListener {
 
         val isLocked = MaskPrefs.isLocked(this)
         val isVisible = MaskPrefs.isVisible(this)
-        val editOpacity = MaskPrefs.getOpacity(this)
-        val lockedOpacity = MaskPrefs.getLockedOpacity(this)
+        val opacity = MaskPrefs.getOpacity(this)
+        val style = MaskPrefs.getOverlayStyle(this)
 
         val maskView = MaskView(
             context = this,
             tile = tile,
-            opacity = editOpacity,
-            lockedOpacity = lockedOpacity,
+            opacity = opacity,
             isLocked = isLocked,
+            overlayStyle = style,
             listener = this
         )
 

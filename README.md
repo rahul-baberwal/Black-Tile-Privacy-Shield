@@ -4,24 +4,23 @@
 
 ---
 
-## What's New in Version 1.1.2 (Build 5)
+## What's New in Version 1.1.3 (Build 6)
 
-- **Consistent Opacity Before & After Lock:**
-  - Tiles maintain their exact configured opacity before and after locking. Locking hides handles and borders with touch-passthrough without any unexpected transparency changes.
+- **100% Full-Dark Opacity When Locked:**
+  - When privacy tiles are locked, they are guaranteed 100% fully dark & opaque (`alpha = 255`), ensuring zero transparency so nothing underneath is visible to anyone nearby.
+- **6 Selectable Overlay Styles & Textures:**
+  - **Pitch Black (OLED):** Pure `#000000` for maximum privacy and OLED power efficiency.
+  - **Matte Obsidian:** Deep charcoal `#121216` with anti-glare aesthetic.
+  - **Midnight Navy:** Solid dark blue `#0B1026` matching the app visual theme.
+  - **Dark Slate:** Deep graphite `#161B22` for subtle on-screen blending.
+  - **Carbon Fiber Weave:** Hardware-accelerated repeating micro-weave texture over a 100% opaque solid security base.
+  - **Security Dot Mesh:** Hardware-accelerated repeating micro-mesh grid over a 100% opaque solid security base.
+- **Live Preview & Selection Swatches in Settings:**
+  - Instant live switching between overlay styles with immediate propagation to running overlay tiles.
 - **Instant UI State Synchronization:**
   - Real-time synchronization between the dashboard (`MainActivity`), active overlays (`OverlayService`), Quick Settings tile, and home-screen widget.
-  - Adding a tile or starting/stopping the overlay immediately reflects on button labels and status indicators without race conditions or delay.
-- **Developer Profile Branding:**
-  - Added bundled local developer avatar for Rahul Baberwal on the About screen.
-- **Security & Keystore Hardening:**
-  - Signing credentials strictly separated from codebase via `local.properties` and environment variables.
-- **Optimized Circular & Squircle Icons:**
-  - Enhanced circular safe-zone margins across all launcher shapes and Google Play Store assets.
-- **Dedicated Locked-Tile Opacity (Default 95%):**
-  - Independent opacity configuration for locked mode versus edit mode.
-  - While unlocked (edit mode), tiles remain easy to position and resize.
-  - When locked, tiles apply the locked opacity while maintaining full touch-passthrough (`FLAG_NOT_TOUCHABLE`) to underlying apps.
-  - Changes made in Settings apply immediately to any active overlay.
+- **Developer Profile & Safe Keystore Management:**
+  - Bundled local developer avatar for Rahul Baberwal, strict separation of signing secrets in `local.properties`.
 - **Three-Screen Architecture:**
   - **Home Screen (`MainActivity`):** Streamlined dashboard with overlay status, Start/Stop toggle, Add Tile button, quick lock/show switches, and direct navigation.
   - **Settings (`SettingsActivity`):** Fine-tune editing and locked opacity sliders, remove all tiles with confirmation, reset settings to defaults, and review the privacy policy.

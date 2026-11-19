@@ -49,6 +49,7 @@ object MaskPrefs {
     private const val KEY_TILES = "tiles_json"
     private const val KEY_OPACITY = "opacity"
     private const val KEY_LOCKED_OPACITY = "locked_opacity"
+    private const val KEY_OVERLAY_STYLE = "overlay_style"
     private const val KEY_LOCKED = "locked"
     private const val KEY_VISIBLE = "visible"
 
@@ -56,6 +57,13 @@ object MaskPrefs {
     const val DEFAULT_LOCKED_OPACITY = 100
     const val MIN_OPACITY = 20
     const val MAX_OPACITY = 100
+
+    const val STYLE_PURE_BLACK = "pure_black"
+    const val STYLE_MATTE_OBSIDIAN = "matte_obsidian"
+    const val STYLE_DARK_NAVY = "dark_navy"
+    const val STYLE_DARK_SLATE = "dark_slate"
+    const val STYLE_CARBON_WEAVE = "carbon_weave"
+    const val STYLE_DOT_MATRIX = "dot_matrix"
 
     private fun getPrefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -128,10 +136,19 @@ object MaskPrefs {
         getPrefs(context).edit().putBoolean(KEY_VISIBLE, visible).apply()
     }
 
+    fun getOverlayStyle(context: Context): String {
+        return getPrefs(context).getString(KEY_OVERLAY_STYLE, STYLE_PURE_BLACK) ?: STYLE_PURE_BLACK
+    }
+
+    fun setOverlayStyle(context: Context, style: String) {
+        getPrefs(context).edit().putString(KEY_OVERLAY_STYLE, style).apply()
+    }
+
     fun resetToDefaults(context: Context) {
         getPrefs(context).edit()
             .putInt(KEY_OPACITY, DEFAULT_EDIT_OPACITY)
             .putInt(KEY_LOCKED_OPACITY, DEFAULT_LOCKED_OPACITY)
+            .putString(KEY_OVERLAY_STYLE, STYLE_PURE_BLACK)
             .putBoolean(KEY_LOCKED, false)
             .putBoolean(KEY_VISIBLE, true)
             .apply()
