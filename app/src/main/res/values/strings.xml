@@ -1,5 +1,7 @@
 <resources>
+    <!-- General Application -->
     <string name="app_name">Black Tile</string>
+    <string name="home_header_subtitle">Software privacy display for everyday apps</string>
     <string name="status_active">Privacy display is active (%1$d %2$s)</string>
     <string name="status_stopped">Privacy display is stopped</string>
     <string name="status_permission_needed">Overlay permission required to display tiles over other apps.</string>
@@ -11,9 +13,68 @@
     <string name="desc_lock_tiles">Hide handles and pass touches to apps below</string>
     <string name="label_show_tiles">Show Tiles</string>
     <string name="desc_show_tiles">Toggle visibility of all black tiles</string>
-    <string name="label_opacity">Tile Opacity</string>
+    <string name="home_section_controls">Quick Controls</string>
+    <string name="home_section_navigation">Preferences &amp; Information</string>
+    <string name="home_card_settings_title">Settings &amp; Opacity</string>
+    <string name="home_card_settings_desc">Configure edit and locked opacities, reset or clear tiles</string>
+    <string name="home_card_about_title">About Developer</string>
+    <string name="home_card_about_desc">Rahul Baberwal • Developer details, profiles, and repository</string>
+
+    <!-- Help & Instructions -->
     <string name="help_title">How to Use</string>
-    <string name="help_text" formatted="false">1. Edit Mode: Drag anywhere on a tile to move. Drag the bottom-right corner to resize. Tap ✕ to delete.\n2. Lock Mode: Hides borders and handles, allowing all touch events to pass directly through.\n3. Opacity: Tune shade opacity between 20% and 100%.\n4. Quick Settings: Use the Quick Settings tile in your notification drawer.\n5. Widget: Add the 3-button widget to your home screen.</string>
+    <string name="help_text" formatted="false">1. Edit Mode: Drag anywhere on a tile to move. Drag the bottom-right corner to resize. Tap ✕ to delete.\n2. Lock Mode: Hides borders and handles, allowing all touch events to pass directly through.\n3. Opacity: Tune shade opacity between 20% and 100% in Settings.\n4. Quick Settings: Use the Quick Settings tile in your notification drawer.\n5. Widget: Add the 3-button widget to your home screen.</string>
+
+    <!-- Settings Screen -->
+    <string name="title_settings">Settings</string>
+    <string name="settings_section_opacity">Opacity Settings</string>
+    <string name="label_opacity_edit">Opacity while editing</string>
+    <string name="desc_opacity_edit">Used while moving and resizing tiles in edit mode</string>
+    <string name="label_opacity_locked">Opacity when locked (default 100%)</string>
+    <string name="desc_opacity_locked">Used when tiles are locked for screen privacy</string>
+    <string name="settings_section_management">Tile Management</string>
+    <string name="btn_remove_all_tiles">Remove All Tiles</string>
+    <string name="desc_remove_all_tiles">Delete all currently configured floating privacy tiles</string>
+    <string name="dialog_remove_all_title">Remove all tiles?</string>
+    <string name="dialog_remove_all_message">Are you sure you want to remove all tiles? This action cannot be undone.</string>
+    <string name="toast_tiles_removed">All tiles have been removed</string>
+
+    <string name="settings_section_defaults">Defaults &amp; Reset</string>
+    <string name="btn_reset_defaults">Reset to Defaults</string>
+    <string name="desc_reset_defaults">Reset opacity values, lock status, and visibility</string>
+    <string name="dialog_reset_title">Reset to defaults?</string>
+    <string name="dialog_reset_message" formatted="false">Reset opacity values (100% editing, 100% locked), unlock tiles, and restore visibility?</string>
+    <string name="toast_defaults_reset">Settings reset to defaults</string>
+
+    <string name="settings_section_privacy">Privacy</string>
+    <string name="btn_privacy_policy">Privacy Policy</string>
+    <string name="desc_privacy_policy">Pure offline utility \u2014 zero data collection, zero network access</string>
+    <string name="privacy_policy_url">https://github.com/rahul-baberwal/Black-Tile-Privacy-Shield#privacy-policy</string>
+
+    <!-- About Developer Screen -->
+    <string name="title_about">About Developer</string>
+    <string name="dev_name">Rahul Baberwal</string>
+    <string name="dev_blurb">Creator of django-meta-whatsapp and Black Tile. Passionate about building robust tools for developers.</string>
+    <string name="dev_initials">RB</string>
+    <string name="dev_section_connect">Connect</string>
+    <string name="btn_website">Website</string>
+    <string name="btn_github">GitHub</string>
+    <string name="btn_gitlab">GitLab</string>
+    <string name="btn_linkedin">LinkedIn</string>
+    <string name="btn_email">Email</string>
+    <string name="url_website">https://rahulbaberwal.com</string>
+    <string name="url_github">https://github.com/rahul-baberwal</string>
+    <string name="url_gitlab">https://gitlab.com/rahul-baberwal</string>
+    <string name="url_linkedin">https://linkedin.com/in/rahul-baberwal</string>
+    <string name="url_email">im@rahulbaberwal.com</string>
+
+    <string name="dev_section_app">App Details</string>
+    <string name="app_version_format">Version %1$s (Build %2$d)</string>
+    <string name="app_badge_privacy">Free, no ads, no data collected</string>
+    <string name="app_source_label">Source Code</string>
+    <string name="app_source_desc">github.com/rahul-baberwal/Black-Tile-Privacy-Shield</string>
+    <string name="url_source_repo">https://github.com/rahul-baberwal/Black-Tile-Privacy-Shield</string>
+
+    <!-- Notification & Tile Actions -->
     <string name="notification_channel_name">Black Tile Overlay</string>
     <string name="notification_channel_desc">Active privacy display overlay service</string>
     <string name="notification_title">Black Tile Overlay Active</string>
@@ -22,8 +83,18 @@
     <string name="action_hide">Hide</string>
     <string name="action_show">Show</string>
     <string name="action_stop">Stop</string>
+    <string name="action_settings">Settings</string>
     <string name="qs_tile_label">Black Tile</string>
     <string name="widget_name">Black Tile Widget</string>
     <string name="tile_singular">tile</string>
     <string name="tile_plural">tiles</string>
+    <string name="state_locked">Locked</string>
+    <string name="state_editable">Editable</string>
+    <string name="state_visible">Visible</string>
+    <string name="state_hidden">Hidden</string>
+
+    <!-- Common Dialog Actions & Toasts -->
+    <string name="dialog_confirm">Confirm</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="toast_no_app_available">No application found to handle this action.</string>
 </resources>

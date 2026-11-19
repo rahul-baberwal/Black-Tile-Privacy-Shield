@@ -1,0 +1,6 @@
+- Added separate Locked-Tile Opacity setting (default 95%) with instant live overlay preview.
+- New Settings screen: configure editing vs locked opacity, reset to defaults, and remove all tiles with confirmation.
+- New About Developer screen: developer profile, social and code repository links, and app details.
+- Refreshed dark visual design with rounded cards, vibrant accent highlights, and pure vector icons.
+- Retains zero dependencies, zero network access, and complete on-device privacy.
+

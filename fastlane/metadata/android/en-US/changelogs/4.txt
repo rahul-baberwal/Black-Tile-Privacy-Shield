@@ -1,0 +1,5 @@
+- Instant UI state synchronization between dashboard, active overlay, quick settings, and widget.
+- Added developer avatar and profile branding.
+- Locked-tile opacity defaults to 100% full black shield.
+- Security hardening: build configuration strictly separates signing credentials from codebase.
+

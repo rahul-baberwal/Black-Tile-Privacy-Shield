@@ -1,0 +1,15 @@
+Black Tile is a lightweight, pure-framework Android privacy utility that allows you to place movable, resizable black tiles over any app on your screen.
+
+Whether you are in a public space, commuting, or sharing screenshots, Black Tile shields confidential content—such as private chat conversations, passwords, account balances, and sensitive documents—from over-the-shoulder peeking.
+
+Key Features:
+• Multiple Floating Tiles: Place, move, and resize as many independent privacy tiles as needed.
+• Interactive Edit Mode: Move tiles anywhere and resize via bottom-right grip handles.
+• Lock Mode (Touch Passthrough): Hide borders and handles; touches pass directly through to underlying apps.
+• Dual Opacity Control: Choose different opacity levels for editing vs locked privacy mode (default 95%).
+• Quick Settings Tile & Widget: Toggle overlay visibility or lock state in a single tap from your notification shade or home screen.
+• Zero Permissions: Completely offline with zero network/internet permission, zero ads, and zero analytics.
+
+Important Note:
+Black Tile is a software graphical mask. It cannot physically alter the viewing angle of your hardware screen. Areas left uncovered remain visible to nearby onlookers.
+

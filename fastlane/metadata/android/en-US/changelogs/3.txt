@@ -1,0 +1,4 @@
+- Enhanced app launcher icon with proper margins and circular safe-zone padding to prevent clipping on all launcher shapes.
+- Updated Google Play Store and launcher icon assets.
+- Performance and stability improvements.
+

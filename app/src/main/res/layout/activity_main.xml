@@ -9,46 +9,91 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="16dp">
 
-        <!-- App Header Card -->
+        <!-- Top Bar / App Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/widget_bg"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp"
+            android:paddingTop="8dp">
 
-            <TextView
-                android:id="@+id/tvAppTitle"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
-                android:textColor="@color/text_primary"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvAppTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:textColor="@color/text_primary"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/home_header_subtitle"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!-- Navigation Buttons: Settings & About -->
+            <ImageButton
+                android:id="@+id/btnTopSettings"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/btn_icon_topbar"
+                android:contentDescription="@string/title_settings"
+                android:src="@drawable/ic_settings" />
+
+            <ImageButton
+                android:id="@+id/btnTopAbout"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/btn_icon_topbar"
+                android:contentDescription="@string/title_about"
+                android:src="@drawable/ic_info" />
+        </LinearLayout>
+
+        <!-- Status Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/card_bg"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvStatus"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
                 android:text="@string/status_stopped"
-                android:textColor="@color/accent"
-                android:textSize="14sp" />
+                android:textColor="@color/text_secondary"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/btnGrantPermission"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/btn_dark_rounded"
+                android:layout_marginTop="14dp"
+                android:background="@drawable/btn_secondary"
+                android:minHeight="48dp"
                 android:text="@string/btn_grant_permission"
                 android:textColor="@color/accent"
+                android:textStyle="bold"
                 android:visibility="gone" />
         </LinearLayout>
 
-        <!-- Primary Controls -->
+        <!-- Primary Start/Stop & Add Tile Controls -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -61,9 +106,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="6dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_dark_rounded"
+                android:background="@drawable/btn_accent"
+                android:minHeight="48dp"
                 android:text="@string/btn_start"
-                android:textColor="@color/text_primary"
+                android:textColor="@color/btn_accent_text"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
             <Button
@@ -72,21 +119,32 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_weight="1"
-                android:background="@drawable/btn_dark_rounded"
+                android:background="@drawable/btn_secondary"
+                android:minHeight="48dp"
                 android:text="@string/btn_add_tile"
-                android:textColor="@color/accent" />
+                android:textColor="@color/accent"
+                android:textSize="15sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Toggle Controls Card -->
+        <!-- Quick Toggles Card -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@drawable/widget_bg"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:background="@drawable/card_bg"
+            android:orientation="vertical">
 
-            <!-- Lock Tiles Switch -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="@string/home_section_controls"
+                android:textColor="@color/accent"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <!-- Lock Tiles Row -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -121,7 +179,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"
+                    android:minHeight="48dp" />
             </RelativeLayout>
 
             <View
@@ -130,7 +189,7 @@
                 android:layout_marginVertical="12dp"
                 android:background="@color/divider" />
 
-            <!-- Show Tiles Switch -->
+            <!-- Show Tiles Row -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -165,50 +224,124 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true" />
+                    android:layout_centerVertical="true"
+                    android:minHeight="48dp" />
             </RelativeLayout>
         </LinearLayout>
 
-        <!-- Opacity Slider Card -->
+        <!-- Navigation Links Card -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@drawable/widget_bg"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:background="@drawable/card_bg"
+            android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="@string/home_section_navigation"
+                android:textColor="@color/accent"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentStart="true"
-                    android:text="@string/label_opacity"
-                    android:textColor="@color/text_primary"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvOpacityValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:text="100%"
-                    android:textColor="@color/accent"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-            </RelativeLayout>
-
-            <SeekBar
-                android:id="@+id/sbOpacity"
+            <!-- Settings Row Button -->
+            <LinearLayout
+                android:id="@+id/rowNavSettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:max="80"
-                android:progress="80" />
+                android:background="@drawable/btn_secondary"
+                android:gravity="center_vertical"
+                android:minHeight="56dp"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="12dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_settings" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/home_card_settings_title"
+                        android:textColor="@color/text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/home_card_settings_desc"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_open_in_new" />
+            </LinearLayout>
+
+            <!-- About Developer Row Button -->
+            <LinearLayout
+                android:id="@+id/rowNavAbout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/btn_secondary"
+                android:gravity="center_vertical"
+                android:minHeight="56dp"
+                android:orientation="horizontal"
+                android:padding="12dp">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="12dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_info" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/home_card_about_title"
+                        android:textColor="@color/text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/home_card_about_desc"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_open_in_new" />
+            </LinearLayout>
         </LinearLayout>
 
         <!-- Help & Instructions Card -->
@@ -216,9 +349,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:background="@drawable/widget_bg"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:background="@drawable/card_bg"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"

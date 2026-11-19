@@ -1,4 +1,4 @@
-package com.example
+package com.rahulbaberwal.blacktile
 
 import android.content.Context
 import android.graphics.Canvas
@@ -10,17 +10,18 @@ import android.view.MotionEvent
 import android.view.View
 import kotlin.math.abs
 import kotlin.math.max
-import kotlin.math.min
 
 /**
  * Custom view representing an individual privacy tile.
  * Renders the black fill, dashed border, close button, and resize handle.
+ * Draws at [lockedOpacity] when locked, and [opacity] when unlocked.
  * Handles touch gestures for moving and resizing the tile when unlocked.
  */
 class MaskView(
     context: Context,
     val tile: Tile,
     var opacity: Int = 100,
+    var lockedOpacity: Int = 95,
     var isLocked: Boolean = false,
     private val listener: TileInteractionListener
 ) : View(context) {
@@ -82,12 +83,12 @@ class MaskView(
         val h = height.toFloat()
         if (w <= 0 || h <= 0) return
 
-        // 1. Draw black mask fill with configured opacity
+        // 1. Draw black mask fill with configured opacity (identical before and after locking)
         val alpha = ((opacity.coerceIn(20, 100) / 100f) * 255).toInt()
         fillPaint.color = Color.argb(alpha, 0, 0, 0)
         canvas.drawRect(0f, 0f, w, h, fillPaint)
 
-        // 2. In locked mode, hide borders, handles, and icons
+        // 2. In locked mode, hide borders, handles, and close icons
         if (isLocked) {
             return
         }

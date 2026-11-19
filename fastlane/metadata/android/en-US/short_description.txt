@@ -1,0 +1,2 @@
+Lightweight on-screen privacy tiles to shield sensitive screen areas.
+

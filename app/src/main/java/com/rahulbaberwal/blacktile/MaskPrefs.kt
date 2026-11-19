@@ -1,4 +1,4 @@
-package com.example
+package com.rahulbaberwal.blacktile
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -41,15 +41,21 @@ data class Tile(
 }
 
 /**
- * Manages persistence for tiles, opacity, lock mode, and visibility
- * using standard SharedPreferences and JSON.
+ * Manages persistence for tiles, editing opacity, locked opacity, lock mode,
+ * and visibility using standard Android SharedPreferences and JSON.
  */
 object MaskPrefs {
     private const val PREFS_NAME = "black_tile_prefs"
     private const val KEY_TILES = "tiles_json"
     private const val KEY_OPACITY = "opacity"
+    private const val KEY_LOCKED_OPACITY = "locked_opacity"
     private const val KEY_LOCKED = "locked"
     private const val KEY_VISIBLE = "visible"
+
+    const val DEFAULT_EDIT_OPACITY = 100
+    const val DEFAULT_LOCKED_OPACITY = 100
+    const val MIN_OPACITY = 20
+    const val MAX_OPACITY = 100
 
     private fun getPrefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -80,13 +86,30 @@ object MaskPrefs {
         getPrefs(context).edit().putString(KEY_TILES, array.toString()).apply()
     }
 
+    fun clearAllTiles(context: Context) {
+        getPrefs(context).edit().remove(KEY_TILES).apply()
+    }
+
     fun getOpacity(context: Context): Int {
-        return getPrefs(context).getInt(KEY_OPACITY, 100).coerceIn(20, 100)
+        return getPrefs(context).getInt(KEY_OPACITY, DEFAULT_EDIT_OPACITY)
+            .coerceIn(MIN_OPACITY, MAX_OPACITY)
     }
 
     fun setOpacity(context: Context, opacity: Int) {
-        val clamped = opacity.coerceIn(20, 100)
-        getPrefs(context).edit().putInt(KEY_OPACITY, clamped).apply()
+        val clamped = opacity.coerceIn(MIN_OPACITY, MAX_OPACITY)
+        getPrefs(context).edit()
+            .putInt(KEY_OPACITY, clamped)
+            .putInt(KEY_LOCKED_OPACITY, clamped)
+            .apply()
+    }
+
+    fun getLockedOpacity(context: Context): Int {
+        // Always return the primary tile opacity so locked tiles never change opacity unexpectedly
+        return getOpacity(context)
+    }
+
+    fun setLockedOpacity(context: Context, opacity: Int) {
+        setOpacity(context, opacity)
     }
 
     fun isLocked(context: Context): Boolean {
@@ -103,6 +126,15 @@ object MaskPrefs {
 
     fun setVisible(context: Context, visible: Boolean) {
         getPrefs(context).edit().putBoolean(KEY_VISIBLE, visible).apply()
+    }
+
+    fun resetToDefaults(context: Context) {
+        getPrefs(context).edit()
+            .putInt(KEY_OPACITY, DEFAULT_EDIT_OPACITY)
+            .putInt(KEY_LOCKED_OPACITY, DEFAULT_LOCKED_OPACITY)
+            .putBoolean(KEY_LOCKED, false)
+            .putBoolean(KEY_VISIBLE, true)
+            .apply()
     }
 
     fun createDefaultTile(context: Context, displayWidth: Int, displayHeight: Int): Tile {

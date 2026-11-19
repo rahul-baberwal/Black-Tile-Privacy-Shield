@@ -1,14 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg_dark">#121212</color>
-    <color name="surface_dark">#1E1E1E</color>
-    <color name="surface_card">#252525</color>
-    <color name="accent">#4FC3F7</color>
-    <color name="accent_green">#81C784</color>
-    <color name="accent_red">#E57373</color>
-    <color name="text_primary">#FFFFFF</color>
-    <color name="text_secondary">#AAAAAA</color>
-    <color name="divider">#333333</color>
+    <!-- Background & Surface Colors matching App Icon -->
+    <color name="bg_dark">#0B0E24</color>
+    <color name="surface_card">#141A45</color>
+    <color name="card_stroke">#262D66</color>
+    <color name="surface_card_alt">#1A2154</color>
+
+    <!-- Accent & Highlights -->
+    <color name="accent">#8B93FF</color>
+    <color name="accent_pressed">#757EF5</color>
+    <color name="accent_green">#4ADE80</color>
+    <color name="accent_red">#F87171</color>
+
+    <!-- Buttons -->
+    <color name="btn_surface">#1C235A</color>
+    <color name="btn_surface_stroke">#2F387D</color>
+    <color name="btn_surface_pressed">#262F70</color>
+    <color name="btn_accent_text">#0B0E24</color>
+
+    <!-- Danger action button & card -->
+    <color name="btn_danger_bg">#3D1424</color>
+    <color name="btn_danger_stroke">#7F1D3D</color>
+    <color name="card_danger_bg">#231226</color>
+    <color name="card_danger_stroke">#5C1D33</color>
+
+    <!-- Typography -->
+    <color name="text_primary">#EEF0FF</color>
+    <color name="text_secondary">#A3AAD9</color>
+    <color name="text_muted">#7C83B8</color>
+
+    <!-- Structural -->
+    <color name="divider">#1F2656</color>
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 </resources>

@@ -17,6 +17,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BlackTile">
 
+        <!-- Main Home Dashboard Screen -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -28,6 +29,21 @@
             </intent-filter>
         </activity>
 
+        <!-- Settings Screen -->
+        <activity
+            android:name=".SettingsActivity"
+            android:exported="false"
+            android:label="@string/title_settings"
+            android:theme="@style/Theme.BlackTile" />
+
+        <!-- About Developer Screen -->
+        <activity
+            android:name=".AboutActivity"
+            android:exported="false"
+            android:label="@string/title_about"
+            android:theme="@style/Theme.BlackTile" />
+
+        <!-- Overlay Floating Mask Service -->
         <service
             android:name=".OverlayService"
             android:exported="false"
@@ -37,6 +53,7 @@
                 android:value="Privacy display screen overlay" />
         </service>
 
+        <!-- Quick Settings Tile -->
         <service
             android:name=".MaskTileService"
             android:exported="true"
@@ -48,6 +65,7 @@
             </intent-filter>
         </service>
 
+        <!-- Home-Screen Widget -->
         <receiver
             android:name=".MaskWidget"
             android:exported="true"

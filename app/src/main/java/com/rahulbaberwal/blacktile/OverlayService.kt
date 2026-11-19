@@ -1,4 +1,4 @@
-package com.example
+package com.rahulbaberwal.blacktile
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -15,22 +15,24 @@ import android.os.IBinder
 import android.provider.Settings
 import android.service.quicksettings.TileService
 import android.view.Gravity
-import android.view.View
 import android.view.WindowManager
 
 /**
  * Foreground service that hosts and controls multiple floating privacy mask tiles.
- * Supports starting, adding tiles, toggling lock/edit modes, visibility, and stopping.
+ * Supports starting, adding tiles, toggling lock/edit modes, visibility,
+ * refreshing opacity (both edit and locked opacities), clearing all tiles, and stopping.
  */
 class OverlayService : Service(), MaskView.TileInteractionListener {
 
     companion object {
-        const val ACTION_START = "com.example.blacktile.action.START"
-        const val ACTION_ADD = "com.example.blacktile.action.ADD"
-        const val ACTION_LOCK = "com.example.blacktile.action.LOCK"
-        const val ACTION_VISIBLE = "com.example.blacktile.action.VISIBLE"
-        const val ACTION_REFRESH = "com.example.blacktile.action.REFRESH"
-        const val ACTION_STOP = "com.example.blacktile.action.STOP"
+        const val ACTION_START = "com.rahulbaberwal.blacktile.action.START"
+        const val ACTION_ADD = "com.rahulbaberwal.blacktile.action.ADD"
+        const val ACTION_LOCK = "com.rahulbaberwal.blacktile.action.LOCK"
+        const val ACTION_VISIBLE = "com.rahulbaberwal.blacktile.action.VISIBLE"
+        const val ACTION_REFRESH = "com.rahulbaberwal.blacktile.action.REFRESH"
+        const val ACTION_CLEAR_ALL = "com.rahulbaberwal.blacktile.action.CLEAR_ALL"
+        const val ACTION_STOP = "com.rahulbaberwal.blacktile.action.STOP"
+        const val ACTION_STATE_CHANGED = "com.rahulbaberwal.blacktile.action.STATE_CHANGED"
 
         const val EXTRA_LOCKED = "extra_locked"
         const val EXTRA_VISIBLE = "extra_visible"
@@ -41,6 +43,20 @@ class OverlayService : Service(), MaskView.TileInteractionListener {
         @Volatile
         var alive: Boolean = false
             private set
+
+        fun interface StateListener {
+            fun onStateChanged()
+        }
+
+        private val listeners = java.util.concurrent.CopyOnWriteArraySet<StateListener>()
+
+        fun registerListener(listener: StateListener) {
+            listeners.add(listener)
+        }
+
+        fun unregisterListener(listener: StateListener) {
+            listeners.remove(listener)
+        }
     }
 
     private lateinit var windowManager: WindowManager
@@ -79,6 +95,7 @@ class OverlayService : Service(), MaskView.TileInteractionListener {
                 handleVisible(targetVisible)
             }
             ACTION_REFRESH -> handleRefresh()
+            ACTION_CLEAR_ALL -> handleClearAll()
             ACTION_STOP -> {
                 handleStop()
                 return START_NOT_STICKY
@@ -106,6 +123,13 @@ class OverlayService : Service(), MaskView.TileInteractionListener {
         if (tiles.isEmpty()) {
             tiles.addAll(MaskPrefs.loadTiles(this))
         }
+        // If service was started directly with ACTION_ADD, render existing tiles first
+        if (activeViews.isEmpty() && MaskPrefs.isVisible(this)) {
+            for (tile in tiles) {
+                attachTileWindow(tile)
+            }
+        }
+
         val dm = resources.displayMetrics
         val newTile = MaskPrefs.createDefaultTile(this, dm.widthPixels, dm.heightPixels)
 
@@ -113,8 +137,8 @@ class OverlayService : Service(), MaskView.TileInteractionListener {
         if (tiles.isNotEmpty()) {
             val density = dm.density
             val offset = ((tiles.size % 5) * 24 * density).toInt()
-            newTile.x = (newTile.x + offset).coerceAtMost(dm.widthPixels - newTile.w)
-            newTile.y = (newTile.y + offset).coerceAtMost(dm.heightPixels - newTile.h)
+            newTile.x = (newTile.x + offset).coerceAtMost((dm.widthPixels - newTile.w).coerceAtLeast(0))
+            newTile.y = (newTile.y + offset).coerceAtMost((dm.heightPixels - newTile.h).coerceAtLeast(0))
         }
 
         tiles.add(newTile)
@@ -128,12 +152,14 @@ class OverlayService : Service(), MaskView.TileInteractionListener {
     private fun handleLock(locked: Boolean) {
         MaskPrefs.setLocked(this, locked)
         val visible = MaskPrefs.isVisible(this)
-        val opacity = MaskPrefs.getOpacity(this)
+        val editOpacity = MaskPrefs.getOpacity(this)
+        val lockedOpacity = MaskPrefs.getLockedOpacity(this)
 
         for ((_, pair) in activeViews) {
             val (maskView, params) = pair
             maskView.isLocked = locked
-            maskView.opacity = opacity
+            maskView.opacity = editOpacity
+            maskView.lockedOpacity = lockedOpacity
             maskView.invalidate()
 
             params.flags = computeWindowFlags(locked, visible)
@@ -155,13 +181,19 @@ class OverlayService : Service(), MaskView.TileInteractionListener {
     }
 
     private fun handleRefresh() {
-        val opacity = MaskPrefs.getOpacity(this)
+        val editOpacity = MaskPrefs.getOpacity(this)
+        val lockedOpacity = MaskPrefs.getLockedOpacity(this)
         val locked = MaskPrefs.isLocked(this)
         val visible = MaskPrefs.isVisible(this)
 
+        // Sync tiles list with disk
+        tiles.clear()
+        tiles.addAll(MaskPrefs.loadTiles(this))
+
         for ((_, pair) in activeViews) {
             val (maskView, params) = pair
-            maskView.opacity = opacity
+            maskView.opacity = editOpacity
+            maskView.lockedOpacity = lockedOpacity
             maskView.isLocked = locked
             maskView.invalidate()
 
@@ -172,6 +204,12 @@ class OverlayService : Service(), MaskView.TileInteractionListener {
                 e.printStackTrace()
             }
         }
+    }
+
+    private fun handleClearAll() {
+        removeAllTileViews()
+        tiles.clear()
+        MaskPrefs.clearAllTiles(this)
     }
 
     private fun handleStop() {
@@ -215,12 +253,14 @@ class OverlayService : Service(), MaskView.TileInteractionListener {
 
         val isLocked = MaskPrefs.isLocked(this)
         val isVisible = MaskPrefs.isVisible(this)
-        val opacity = MaskPrefs.getOpacity(this)
+        val editOpacity = MaskPrefs.getOpacity(this)
+        val lockedOpacity = MaskPrefs.getLockedOpacity(this)
 
         val maskView = MaskView(
             context = this,
             tile = tile,
-            opacity = opacity,
+            opacity = editOpacity,
+            lockedOpacity = lockedOpacity,
             isLocked = isLocked,
             listener = this
         )
@@ -328,7 +368,7 @@ class OverlayService : Service(), MaskView.TileInteractionListener {
         val visible = MaskPrefs.isVisible(this)
         val count = tiles.size
         val countText = "$count ${if (count == 1) getString(R.string.tile_singular) else getString(R.string.tile_plural)}"
-        val contentText = "${if (locked) "Locked" else "Editable"} • ${if (visible) "Visible" else "Hidden"} ($countText)"
+        val contentText = "${if (locked) getString(R.string.state_locked) else getString(R.string.state_editable)} • ${if (visible) getString(R.string.state_visible) else getString(R.string.state_hidden)} ($countText)"
 
         // Activity Intent
         val activityIntent = Intent(this, MainActivity::class.java)
@@ -414,6 +454,24 @@ class OverlayService : Service(), MaskView.TileInteractionListener {
             e.printStackTrace()
         }
         MaskWidget.updateWidgets(this)
+
+        for (listener in listeners) {
+            try {
+                listener.onStateChanged()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
+        try {
+            val intent = Intent(ACTION_STATE_CHANGED).apply {
+                setPackage(packageName)
+                putExtra("alive", alive)
+            }
+            sendBroadcast(intent)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     override fun onDestroy() {

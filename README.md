@@ -1,16 +1,36 @@
 # Black Tile — Software Privacy Display for Android
 
-**Black Tile** is a lightweight, pure-framework Android privacy utility that allows users to place movable, resizable black tiles over any app on their screen. Inspired by privacy display concepts like Samsung's Privacy Display, Black Tile shields confidential information (e.g., chat conversations, passwords, balances, sensitive documents) from over-the-shoulder peeking while using everyday applications.
+**Black Tile** is a lightweight, pure-framework Android privacy utility that allows users to place movable, resizable black tiles over any app on their screen. Inspired by on-screen privacy display concepts, Black Tile shields confidential information (e.g., private messages, passwords, balances, sensitive documents) from over-the-shoulder peeking while using everyday applications in public spaces.
 
 ---
 
-## Architecture & Technology Stack
+## What's New in Version 1.1.2 (Build 5)
 
-- **Architecture:** Clean, zero-dependency Android framework implementation.
-- **Language:** Kotlin.
-- **UI System:** Plain `android.app.Activity` and XML layouts (`res/layout/activity_main.xml`, `widget_mask.xml`).
-- **Dependencies:** **Zero third-party libraries and zero AndroidX runtime dependencies**. Built strictly on standard Android framework APIs (`android.*`, `org.json.*`).
-- **Target Platform:** `compileSdk 34`, `targetSdk 34`, `minSdk 26` (Android 8.0+).
+- **Consistent Opacity Before & After Lock:**
+  - Tiles maintain their exact configured opacity before and after locking. Locking hides handles and borders with touch-passthrough without any unexpected transparency changes.
+- **Instant UI State Synchronization:**
+  - Real-time synchronization between the dashboard (`MainActivity`), active overlays (`OverlayService`), Quick Settings tile, and home-screen widget.
+  - Adding a tile or starting/stopping the overlay immediately reflects on button labels and status indicators without race conditions or delay.
+- **Developer Profile Branding:**
+  - Added bundled local developer avatar for Rahul Baberwal on the About screen.
+- **Security & Keystore Hardening:**
+  - Signing credentials strictly separated from codebase via `local.properties` and environment variables.
+- **Optimized Circular & Squircle Icons:**
+  - Enhanced circular safe-zone margins across all launcher shapes and Google Play Store assets.
+- **Dedicated Locked-Tile Opacity (Default 95%):**
+  - Independent opacity configuration for locked mode versus edit mode.
+  - While unlocked (edit mode), tiles remain easy to position and resize.
+  - When locked, tiles apply the locked opacity while maintaining full touch-passthrough (`FLAG_NOT_TOUCHABLE`) to underlying apps.
+  - Changes made in Settings apply immediately to any active overlay.
+- **Three-Screen Architecture:**
+  - **Home Screen (`MainActivity`):** Streamlined dashboard with overlay status, Start/Stop toggle, Add Tile button, quick lock/show switches, and direct navigation.
+  - **Settings (`SettingsActivity`):** Fine-tune editing and locked opacity sliders, remove all tiles with confirmation, reset settings to defaults, and review the privacy policy.
+  - **About Developer (`AboutActivity`):** Developer profile for Rahul Baberwal, custom circular avatar with initials fallback, direct contact channels, and open-source repository link.
+- **Icon-Matching Dark Visual Design:**
+  - Deep dark background (`#0B0E24`), rounded card surfaces (`#141A45`), subtle borders (`#262D66`), and soft indigo accents (`#8B93FF`).
+  - Built exclusively with vector drawables for crisp rendering at all screen densities.
+- **Zero Third-Party Dependencies:**
+  - Written in clean Kotlin against the standard Android platform SDK (`android.*`). Zero external libraries, zero AndroidX dependencies, and strictly zero network permissions (`android.permission.INTERNET` is not requested).
 
 ---
 
@@ -18,65 +38,47 @@
 
 1. **Multiple Floating Overlay Tiles (`OverlayService`):**
    - Each tile runs in its own system overlay window (`WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY`).
-   - Flag configuration: `FLAG_NOT_FOCUSABLE | FLAG_LAYOUT_NO_LIMITS | FLAG_LAYOUT_IN_SCREEN`.
-   - On Android 9.0+ (API 28+), configured with `layoutInDisplayCutoutMode = LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES` for edge-to-edge coverage.
-   - Users can create and manipulate as many concurrent tiles as needed.
-
-2. **Interactive Edit Mode (Unlocked):**
-   - Custom `MaskView` renders the deep black privacy fill bounded by a high-contrast dashed white border.
-   - **Move:** Dragging anywhere inside the tile repositions it across the screen, clamped safely so it cannot be dragged off-screen.
-   - **Resize Handle:** A triangular grip in the bottom-right corner allows smooth resizing down to a safe minimum of 80dp.
-   - **Close Button (✕):** An integrated top-right close handle instantly removes the tile.
-
-3. **Lock Mode (Touch Passthrough):**
-   - When locked, handles and borders disappear, leaving only the solid black mask.
-   - The window adds `FLAG_NOT_TOUCHABLE`, allowing all touch and scroll gestures to pass directly through to whatever application is running underneath.
-
-4. **Opacity Adjustment:**
-   - Adjustable between 20% and 100% via the dashboard slider, dynamically updating the fill alpha across all active tiles.
-
-5. **Quick Settings Tile (`MaskTileService`):**
-   - Integrated Android Quick Settings tile (`TileService`) in the notification shade.
-   - Single-tap starts the overlay or toggles tile visibility.
-   - Automatically prompts for `SYSTEM_ALERT_WINDOW` permission if not yet granted (using modern `startActivityAndCollapse(PendingIntent)` on API 34+).
-
-6. **Home-Screen Widget (`MaskWidget`):**
-   - Compact, horizontally resizable 3-button widget (`RemoteViews`):
-     - **Start / Hide / Show**: Context-aware toggle reflecting current service state.
-     - **+ Tile**: Instantly spawns a new tile.
-     - **Lock / Edit**: Toggles touch passthrough and visual handles.
-   - Dynamically broadcasts state updates to stay in sync with the foreground service.
-
-7. **Foreground Service & Low-Importance Notification:**
-   - Runs as a persistent foreground service (`specialUse` type on API 34+ with `PROPERTY_SPECIAL_USE_FGS_SUBTYPE`).
-   - Low-importance notification channel with 3 quick-action buttons: Lock/Edit, Hide/Show, and Stop.
-
-8. **State Persistence (`MaskPrefs`):**
-   - Tile coordinates, dimensions, lock state, visibility, and opacity are serialized to JSON and stored in `SharedPreferences`.
+   - Edge-to-edge rendering with cutout mode support (`LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES`).
+   - Create as many concurrent tiles as needed.
+2. **Interactive Edit Mode:**
+   - Move tiles freely across the display.
+   - Resize via the bottom-right triangular grip handle (minimum 80dp).
+   - Instant delete handle (✕) in the top-right corner.
+3. **Lock Mode with Touch Passthrough:**
+   - Hides handles and borders, drawing tiles at locked opacity (default 95%).
+   - Adds `FLAG_NOT_TOUCHABLE` so all taps and gestures pass directly to underlying applications.
+4. **Quick Settings Tile (`MaskTileService`):**
+   - Toggle overlay visibility or start the service from the Android notification shade.
+5. **Home-Screen Widget (`MaskWidget`):**
+   - Compact 3-button widget: Toggle (Start / Hide / Show), Add Tile, and Lock / Edit.
+6. **State Persistence (`MaskPrefs`):**
+   - Coordinates, dimensions, opacities, lock mode, and visibility persist locally via `SharedPreferences`.
 
 ---
 
-## Known Limitations
+## Important Notice & Limitations
 
-1. **Software Mask Only (No Physical Viewing-Angle Narrowing):**
-   - Black Tile is an on-screen graphical mask. Unlike specialized hardware privacy screens (e.g., micro-louver privacy filters or hardware-switchable liquid crystal displays), it cannot physically restrict the viewing angles of the display panel itself. Anyone looking directly at uncovered portions of the screen will see them normally.
-2. **Android 12+ (API 31+) Touch Block Behavior:**
-   - On Android 12 and higher, Android's Untrusted Touch Prevention security policy blocks or limits certain touches passing through opaque system overlays when an underlying app requests `FILTER_TOUCHES_WHEN_OBSCURED`.
-3. **Secure System Windows:**
-   - By Android OS security design, `TYPE_APPLICATION_OVERLAY` windows cannot draw over secure system UI components, such as the system lock screen, biometric authentication dialogs, or `FLAG_SECURE` protected banking views.
-4. **Orientation and Pixel Positioning:**
-   - Tile positions are stored as pixel coordinates (`(x, y)` in px). Rotating the screen between portrait and landscape may require moving tiles to re-align them with the new display dimensions.
+- **Software Mask Only:**
+  Black Tile is a software graphical overlay. It cannot physically alter the viewing angles of the display hardware (unlike physical micro-louver privacy filters). Uncovered screen areas remain visible from all angles.
+- **Untrusted Touch Prevention (Android 12+):**
+  When underlying apps set `FILTER_TOUCHES_WHEN_OBSCURED`, Android's OS-level touch filtering may restrict touches passing through overlays.
+- **Secure System Windows:**
+  Android OS security prohibits system overlays from drawing over biometric prompts, the system lockscreen, or views protected by `FLAG_SECURE`.
 
 ---
 
-## Building and Running
+## Privacy Policy
 
-1. Open the project in Android Studio (Jellyfish / Koala or newer) with JDK 17 configured.
-2. Build the project using Gradle:
-   ```bash
-   gradle assembleDebug
-   ```
-3. Run on a device or emulator running Android 8.0 (API 26) through Android 14+ (API 34+).
-4. On first launch, tap **"Grant Display Over Other Apps"** to authorize system overlay privileges.
-5. Grant notification permissions if prompted on Android 13+.
-6. Tap **"Start Overlay"** to launch your privacy display!
+Black Tile is committed to complete user privacy:
+- **No Internet Access:** The app does not declare `android.permission.INTERNET` and cannot connect to any network.
+- **No Analytics or Trackers:** No analytics, tracking, or telemetry libraries are bundled.
+- **Local Storage Only:** Tile coordinates and user preferences are stored strictly on-device in private application storage.
+
+---
+
+## Developer
+
+Developed by **Rahul Baberwal**  
+Website: [rahulbaberwal.com](https://rahulbaberwal.com)  
+GitHub: [github.com/rahul-baberwal](https://github.com/rahul-baberwal)  
+Repository: [Black-Tile-Privacy-Shield](https://github.com/rahul-baberwal/Black-Tile-Privacy-Shield)

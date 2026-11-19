@@ -1,4 +1,4 @@
-package com.example
+package com.rahulbaberwal.blacktile
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager

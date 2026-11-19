@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <style name="Theme.BlackTile" parent="android:Theme.Material.NoActionBar">
-        <item name="android:colorPrimary">@color/surface_dark</item>
+        <item name="android:colorPrimary">@color/surface_card</item>
         <item name="android:colorPrimaryDark">@color/bg_dark</item>
         <item name="android:colorAccent">@color/accent</item>
         <item name="android:windowBackground">@color/bg_dark</item>

@@ -18,3 +18,13 @@ local.properties
 debug.keystore
 debug.keystore.base64
 .build-outputs/
+
+# Release Keystore & Secrets — NEVER commit to version control
+my-upload-key.jks
+*.jks
+*.keystore
+*.pem
+*.p12
+*.b64
+signing.properties
+keystore.properties

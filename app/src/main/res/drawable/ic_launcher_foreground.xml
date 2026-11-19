@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:width="66dp"
-        android:height="66dp"
-        android:drawable="@drawable/black_tile_icon_1794456897848"
+        android:width="40dp"
+        android:height="42dp"
+        android:drawable="@drawable/ic_app_logo_card"
         android:gravity="center" />
 </layer-list>

@@ -1,0 +1,5 @@
+- Tiles maintain identical opacity before and after locking, preventing unexpected shifts in transparency.
+- Updated version name to 1.1.2.
+- Real-time UI state synchronization across dashboard, quick settings, and widget.
+- Bundled developer profile avatar.
+
